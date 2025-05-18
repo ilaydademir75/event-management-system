@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="tr"> <!--Sayfanın dili Türkçe olarak ayarlandı-->
+<head>
+  <meta charset="UTF-8"> <!--Türkçe karakterlerin doğru görüntülenmesi sağlandı-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--Mobil uyumluluk sağlandı-->
+  <title>Yönetici Sayfası</title> <!--Tarayıcıda görünen başlık-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Google Fonts üzerinden Roboto yazı tipi aktarıldı-->
+  <style>
+    /*Sayfanın Tasarımı*/
+    body {
+      font-family: 'Roboto', sans-serif; /*Yazı Tipi*/
+      margin: 0;
+      padding: 50px;
+      background: linear-gradient(to right, #a3e4f3, #48558e); /*Arka plan rengi*/
+      color: #84718a;
+      font-weight: bold; /*Yazıları kalın yapmak için kullanıldı*/
+    }
+
+    /*Başlık Tasarımı*/
+    h2 {
+      text-align: center; /*Yazıyı ortalamak için kullanıldı*/
+      color: #26384a;
+      margin-bottom: 30px; /*Alt boşluk*/
+      font-weight: bold; /*Yazıları kalın yapmak için kullanıldı*/
+      font-size: 40px; /*Yazının büyüklüğü*/
+      text-decoration: underline; /*Yazının altı çizildi*/
+    }
+
+    /*Bölüm Kutusu Ayarları*/
+    section {
+      margin: 30px auto; /*Yukarı-aşağı 30px, ortalanmış*/
+      max-width: 800px; /*Maksimum Genişlik*/
+      background: #fcfcfc;
+      padding: 40px; /*İç boşluk*/
+      border-radius: 18px; /*Köşeleri yuvarlatır*/
+      box-shadow: 0 4px 12px rgba(109, 2, 2, 0.455); /*Gölge efekti*/
+    }
+
+    /*Kullanıcı Onayı, Etkinlik Ekle, Etkinlik Listesi, Duyuru Ekle Yazılarının Tasarımı*/
+    h3 {
+      text-align: center; /*Ortalanmış alt başlık*/
+      font-size: 30px; /*Yazı boyutu*/
+      font-weight: bold;
+      margin-top: 0; /*Üst boşluk yok*/
+      color: #3d5874;
+      border-bottom: 5px solid #e88fbd; /*Alt çizgi*/
+      padding-bottom: 8px; /*Alt dolgu*/
+    }
+
+    label {
+      font-size: 17px; /*Etiket yazı boyutu*/
+      font-weight: bold;
+      margin-top: 10px; /*Üst boşluk*/
+    }
+
+    input, select, textarea {
+      width: 100%; /*Tam genişlik*/
+      padding: 10px; /*İç boşluk*/
+      border: 3px solid #9ca1a4; /*Kenar çizgisi*/
+      border-radius: 6px; /*Köşeleri yuvarlat*/
+      margin-top: 4px; /*Köşeleri yuvarlat*/
+      margin-bottom: 10px; /*Alt boşluk*/
+      font-size: 15px;
+      box-sizing: border-box; /*Genişlik padding dahil*/
+    }
+
+    /*Butonların Tasarımı*/
+    button {
+      background-color: #c2518b;
+      color: white;
+      padding: 10px 18px;
+      border: none; /*Kenarlık yok*/
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease; /*Renk geçiş efekti*/
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #e88fbd; /*Butonun üstüne gelindiğinde rengini değiştirir*/
+    }
+
+    table {
+      width: 100%; /*Tam genişlik*/
+      border-collapse: collapse; /*Hücre araları kapanır*/
+      margin-top: 15px;
+      font-size: 17px;
+      background-color: #fff5fa;
+    }
+
+    table, th, td {
+      border: 3px solid #d2a53b; /*Tablolara kenarlık*/
+    }
+
+    th {
+      background-color: #efc666; /*Başlık arka plan rengi*/
+      font-size: 20px;
+      color: white;
+      padding: 10px;
+    }
+
+    td {
+      padding: 10px; /*Hücre iç boşluğu*/
+    }
+
+    ul {
+      list-style-type: disc; /*Madde işareti*/
+      padding-left: 20px; /*Sol boşluk*/
+      margin-top: 10px;
+    }
+
+    li {
+      margin-bottom: 5px; /*Alt boşluk*/
+    }
+  </style>
+</head>
+<body>
+
+  <h2>YÖNETİCİ SAYFASI</h2>
+
+  <!--Kullanıcı Onayı Bölümü-->
+  <section>
+    <h3>Kullanıcı Onayı</h3>
+    <table id="userTable"></table> <!--Onay bekleyen kullanıcıların listeleneceği tablo-->
+  </section>
+
+  <!--Etkinlik Ekleme Bölümü-->
+  <section>
+    <h3>Etkinlik Ekle</h3>
+    <label>Başlık: <input type="text" id="title"></label> <!--Etkinlik başlığı girişi-->
+    <label>Tarih: <input type="date" id="event_date"></label> <!--Etkinlik tarihi-->
+    <label>Kategori:
+      <select id="category"> <!--Etkinlik kategorisi-->
+        <option>Müzik</option>
+        <option>Spor</option>
+        <option>Tiyatro</option>
+        <option>Teknoloji</option>
+        <option>Sinema</option>
+      </select>
+    </label>
+    <label>Konum: <input type="text" id="location"></label> <!--Etkinlik kategorisi-->
+    <label>Kontenjan: <input type="number" id="quota"></label> <!--Katılımcı sayısı-->
+    <button onclick="addEvent()">Ekle</button> <!--Etkinliği ekle butonu-->
+  </section>
+
+  <!--Etkinlik Listesi Bölümü-->
+  <section>
+    <h3>Etkinlik Listesi</h3>
+    <table id="eventTable"></table> <!--Ekli etkinliklerin listeleneceği tablo-->
+  </section>
+
+  <!-- Duyuru Ekleme Bölümü-->
+  <section>
+    <h3>Duyuru Ekle</h3>
+    <label>Duyuru Metni: <textarea id="announcement"></textarea></label> <!--Duyuru metni girilecek alan-->
+    <button onclick="addAnnouncement()">Ekle</button> <!--Duyuru ekleme butonu-->
+    <ul id="announcementList"></ul> <!--Eklenen duyurular burada listelenecek-->
+  </section>
+
+  <script>
+    //Kullanıcıları veritabanından getir
+    fetch('../backend/get-pending-users.php')
+      .then(res => res.json()) //JSON formatına çevir
+      .then(data => {
+        const table = document.getElementById('userTable'); //User tablosuna eriş
+        table.innerHTML = '<tr><th>Email</th><th>Onayla</th></tr>'; //Başlık satırı
+        data.forEach(user => {
+          table.innerHTML += `
+            <tr>
+              <td>${user.email}</td>
+              <td><button onclick="approveUser(${user.id})">Onayla</button></td>
+            </tr>
+          `; //Her kullanıcıyı tabloya ekle
+        });
+      });
+
+    // Kullanıcı onay fonksiyonu
+    function approveUser(id) {
+      fetch('../backend/approve-user.php?id=' + id)
+        .then(() => location.reload()); //Sayfayı yenile
+    }
+
+    // Etkinlik ekleme fonksiyonu
+    function addEvent() {
+      let data = {
+        title: document.getElementById('title').value, //Başlık
+        date: document.getElementById('event_date').value, //Tarih
+        category: document.getElementById('category').value, //Kategori
+        location: document.getElementById('location').value, //Konum
+        quota: document.getElementById('quota').value //Kontenjan
+      };
+
+      fetch('../backend/add-event.php', {
+        method: 'POST', //POST isteği
+        headers: {'Content-Type': 'application/json'}, //JSON gönder
+        body: JSON.stringify(data) //Veriyi gönder
+      }).then(() => location.reload()); //Sayfayı yenile
+    }
+
+     //Etkinlikleri veritabanından getir
+    fetch('../backend/get-events.php')
+      .then(res => res.json()) //JSON'a çevir
+      .then(data => {
+        const table = document.getElementById('eventTable'); //Event tablosuna eriş
+        table.innerHTML = '<tr><th>Başlık</th><th>Tarih</th><th>Kategori</th><th>Sil</th></tr>'; //Başlık
+        data.forEach(event => {
+          table.innerHTML += `
+            <tr>
+              <td>${event.title}</td>
+              <td>${event.event_date}</td>
+              <td>${event.category}</td>
+              <td><button onclick="deleteEvent(${event.id})">Sil</button></td>
+            </tr>
+          `; //Her etkinliği tabloya ekle
+        });
+      });
+    
+    //Etkinlik silme fonksiyonu
+    function deleteEvent(id) {
+      fetch('../backend/delete-event.php?id=' + id)
+        .then(() => location.reload()); //Sayfayı yenile
+    }
+
+    //Duyuru ekleme fonksiyonu
+    function addAnnouncement() {
+      const text = document.getElementById('announcement').value; //Duyuru metni
+      fetch('../backend/add-announcement.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'}, //JSON başlık
+        body: JSON.stringify({ text }) //Veriyi gönder
+      }).then(() => location.reload()); //Sayfayı yenile
+    }
+
+    //Duyuruları getir
+    fetch('../backend/get-announcements.php')
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById('announcementList'); //Listeye eriş
+        data.forEach(a => {
+          const li = document.createElement('li'); //Liste öğesi oluştur
+          li.textContent = a.text; //İçeriğini ata
+          list.appendChild(li); //Listeye ekle
+        });
+      });
+  </script>
+</body>
+</html>

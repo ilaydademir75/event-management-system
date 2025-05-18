@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="tr"> <!--Sayfanın dili Türkçe olarak ayarlandı-->
+<head>
+  <meta charset="UTF-8"> <!--Türkçe karakterlerin doğru görüntülenmesi sağlandı-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!--Mobil uyumluluk sağlandı-->
+  <title>Ana Sayfa</title> <!--Tarayıcıda görünen başlık-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/> <!--Google Fonts üzerinden Roboto yazı tipi aktarıldı-->
+  <style>
+    /*Sayfanın Tasarımı*/
+    body {
+      font-family: 'Roboto', sans-serif; /*Yazı Tipi*/
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #bdc3c7, #2c3e50); /*Arka plan rengi*/
+    }
+
+    /*Başlık Tasarımı*/
+    h2 {
+      text-align: center; /*Yazıyı ortalamak için kullanıldı*/
+      text-shadow: 2px 2px 5px rgba(228, 226, 226, 0.3), 0 0 25px #282a2d, 0 0 5px #343f44; /*Metin gölgelendirme*/
+      font-size: 55px; /*Yazının büyüklüğü*/
+      color: #001d3a;
+      font-weight: bold; /*Yazıları kalın yapmak için kullanıldı*/
+      border-bottom: 5px solid #001d3a; /*Alt Çizgi*/
+      padding-bottom: 10px;
+      margin-bottom: 30px;
+      margin-top: 30px;
+    }
+
+    /*Bölüm Kutuları*/
+    section {
+      background-color: #ebebeb;
+      padding: 25px;
+      margin: 50px auto;
+      width: 80%; /*Genişlik*/
+      max-width: 900px; /*Maksimum Genişlik*/
+      border-radius: 20px; /*Köşeleri yuvarlatır*/
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1); /*Gölge efekti*/
+    }
+
+    /*Duyurular, Etkinlikler Yazılarının Tasarımı*/
+    h3 {
+      color: #33516f;
+      font-size: 25px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      border-left: 5px solid #420d0d; /*Sol çizgi*/
+      padding-left: 12px; /*Sol iç boşluk*/
+    }
+
+    /*Etkinlik Kutularının Tasarımı*/
+    .event {
+      color: black;
+      font-weight: bold;
+      border: 4px solid #33516f; /*Çerçeve*/
+      padding: 15px; /*İç boşluk*/
+      margin: 15px 0; /*Dış boşluk*/
+      border-radius: 8px;
+      background-color: #fcfcfc;
+      transition: transform 0.2s ease, box-shadow 0.2s ease; /*Animasyon*/
+    }
+
+    /*Etkinlik Kutularının Üzerine Gelindiğinde*/
+    .event:hover {
+      transform: translateY(-2px); /*Hafif yukarı hareket*/
+      box-shadow: 0 8px 24px rgba(97, 97, 97, 0.707); /*Gölge efekti*/
+    }
+
+    /*Buton Tasarımı*/
+    button {
+      padding: 10px 16px; /*İç boşluk*/
+      margin-top: 20px; /*Üst boşluk*/
+      background-color: #420d0d;
+      color: white;
+      border: none; /*Kenarlık yok*/
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.2s ease; /*Renk değişimi animasyonu*/
+    }
+
+    button:hover {
+      background-color: #712d2d; /*Butonun üzerine gelindiğinde arka plan rengi değişir*/
+    }
+
+    /*Hava Durumu ve Öneri Metinleri İçin Tasarım*/
+    .weather, .recommendations {
+      font-style: italic; /*İtalik yazı*/
+      color: #7b8e90;
+      margin-top: 10px;
+      display: block; /*Block elementleri bulunduğu satırın tamamını doldurur. Yani yeni bir şey eklendiğinde yanından değil bir alt satırdan başlar*/
+    }
+
+    section:last-of-type {
+      text-align: center; /*Son section ortalanacak*/
+    }
+
+    /*Sepete Git Butonu İçin Özel Tasarım*/
+    a button {
+      background-color: #001d3a;
+      font-size: 20px;
+    }
+
+    /*Sepete Git Butonunun Üzerine Gelindiğinde*/
+    a button:hover {
+      background-color: #3e566e;
+    }
+
+    /*Duyuru Listesi İçin Tasarım*/
+    ul {
+      font-weight: bold;
+      font-style: italic;
+      font-size: 18px;
+      padding-left: 20px;
+    }
+
+    /*Liste Elemanları*/
+    li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <h2>HOŞGELDİNİZ!</h2>
+
+  <!--Duyurular Bölümü-->
+  <section>
+    <h3>DUYURULAR</h3>
+    <ul id="announcementList"></ul> <!--Duyurular bu listeye dinamik olarak eklenecek-->
+  </section>
+
+  <!-- Etkinlikler Bölümü-->
+  <section>
+    <h3>ETKİNLİKLER</h3>
+    <div id="eventList"></div> <!--Etkinlikler buraya yüklenecek-->
+  </section>
+
+  <!--Sepete Bağlantısı-->
+  <section>
+    <a href="sepet.html"> <!--Sepet sayfasına yönlendirir-->
+      <button>Sepete Git</button> <!--Buton görünümü-->
+    </a>
+  </section>
+
+  <script>
+    //Duyuruları sunucudan al
+    fetch('../backend/get-announcements.php') //PHP dosyasına istek gönder
+      .then(res => res.json()) //JSON yanıt al
+      .then(data => {
+        const list = document.getElementById('announcementList'); //Listeyi bul
+        list.innerHTML = ''; //Temizle
+        data.forEach(a => {
+          const li = document.createElement('li'); //Yeni liste elemanı oluştur
+          li.textContent = a.text; //Duyuru metnini ata
+          list.appendChild(li); //Listeye ekle
+        });
+      });
+
+    //Etkinlikleri sunucudan al ve tarihe göre sırala
+    fetch('../backend/get-events.php') //Etkinlik verilerini çek
+      .then(response => response.json()) //JSON yanıt
+      .then(async events => {
+        const eventDiv = document.getElementById('eventList'); //Liste divini bul
+
+        //Etkinlikleri tarihe göre sırala
+        events.sort((a, b) => new Date(a.event_date) - new Date(b.event_date));
+
+        //Erzurum için hava durumu verisini al
+        const weatherData = await fetch('https://api.openweathermap.org/data/2.5/forecast?q=Erzurum,tr&appid=4511bbdc9116b355f1f4c8edcc3ce0d8&lang=tr&units=metric')
+                                  .then(res => res.json())
+                                  .catch(() => null); //Hata olursa null döner
+        
+        //Her etkinlik için kutu oluştur
+        events.forEach(event => {
+          const eventBox = document.createElement('div'); //Yeni kutu
+          eventBox.className = 'event'; //Sınıf ekle
+
+          //Tarihi uygun formatta getir
+          const eventDate = new Date(event.event_date);
+
+          //Hava durumu verisi eşleştirilir
+          let weatherText = 'Hava Durumu Alınamadı.';
+          if (weatherData && weatherData.list) {
+            const match = weatherData.list.find(f => {
+              const forecastDate = new Date(f.dt_txt);
+              return forecastDate.toDateString() === eventDate.toDateString();
+            });
+
+            if (match) {
+              weatherText = `${match.weather[0].description}, ${match.main.temp}°C`;
+            }
+          }
+
+          //Etkinlik içeriği HTML olarak eklenir
+          eventBox.innerHTML = `
+            <strong>${event.title}</strong><br>
+            Tarih: ${event.event_date}<br>
+            Tür: ${event.category}<br>
+            Konum: ${event.location}<br>
+            Kontenjan: ${event.quota}<br>
+            <div class="weather">Hava Nasıl Olacak?: ${weatherText}</div>
+            <div class="recommendations">İlgi Alanınıza Uygun Mu?: ${event.recommended ? "Evet" : "Hayır"}</div>
+            <button onclick="addToCart(${event.id})">Sepete Ekle</button>
+          `;
+          eventDiv.appendChild(eventBox); //Sayfaya eklenir
+        });
+      });
+
+    //Sepete ekleme fonksiyonu
+    function addToCart(eventId) {
+      fetch(`../backend/add-to-cart.php?id=${eventId}`) //Belirtilen etkinliği sepete ekle
+        .then(() => alert("Etkinlik Sepete Eklendi.")); //Bilgilendirme mesajı
+    }
+  </script>
+</body>
+</html>

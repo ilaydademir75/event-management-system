@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="tr"> <!--Sayfanın dili Türkçe olarak ayarlandı-->
+<head>
+  <meta charset="UTF-8"> <!--Türkçe karakterlerin doğru görüntülenmesi sağlandı-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--Mobil uyumluluk sağlandı-->
+  <title>Sepet-Bilet Al</title> <!--Tarayıcıda görünen başlık-->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> <!--Google Fonts üzerinden Roboto yazı tipi aktarıldı-->
+  <style>
+     /*Sayfanın Tasarımı*/
+     body {
+        font-family: 'Roboto', sans-serif; /*Yazı Tipi*/
+        margin: 20px;
+        background: linear-gradient(to right, #ffffff, #d9e2ec); /*Arka plan rengi*/
+        color: #333;
+     }
+
+     /*Başlık Tasarımı*/
+     h2{
+        font-size: 55px; /*Yazının büyüklüğü*/
+        color: #de8935;
+        border-bottom: 5px solid #355678; /*Alt çizgi*/
+        text-align: center; /*Yazıyı ortalamak için kullanıldı*/
+        margin-bottom: 30px; /*Alt boşluk*/
+     }
+
+     /*Ödeme Yöntemi Tasarımı*/
+     h3{
+        margin-top: 100px; /*Üst boşluk*/
+        font-size: 30px;
+        color: rgb(77, 41, 86);
+        text-align: center;
+     }
+
+     /*Sepet İçindeki Her Öğe*/
+     .cart-item {
+        background-color: #faf2fe;
+        padding: 30px; /*İç boşluk*/
+        margin-bottom: 25px;
+        border-radius: 12px; /*Köşelerini yuvarlaştırmak için kullanıldı*/
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /*Gölge*/
+        transition: transform 0.2s ease;
+     }
+
+     .cart-item:hover {
+        transform: scale(1.01); /*Üzerine gelince büyütme*/
+     }
+
+     /*Etiket Tasarımı*/
+     label {
+        display: block; /*Block elementleri bulunduğu satırın tamamını doldurur. Yani yeni bir şey eklendiğinde yanından değil bir alt satırdan başlar*/
+        margin-top: 10px;
+        font-weight: bold; /*Yazıları kalın yapmak için kullanıldı*/
+     }
+
+     /*Bilet Türü Seçim Kutusu*/
+     select {
+        padding: 8px;
+        border-radius: 6px;
+        border: 3px solid #86275e; /*Kenarlık rengi*/
+        margin-top: 5px;
+        width: 100%;
+     }
+
+     /*Satın Al Butonu Tasarımı*/
+     button {
+        background-color: #58799b;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 20px;
+        font-size: 20px;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;
+        margin-top: 5px;
+        transition: background-color 0.3s;
+     }
+
+     button:hover {
+        background-color: #8199b2; /*Butonun üstüne gelindiğinde rengini değiştirir*/
+     }
+
+     /*Toplam Tutar Metni*/
+     #total {
+        font-weight: bold;
+        text-decoration: underline;
+        font-size: 30px;
+        margin-top: 40px;
+        text-align: center;
+        color: #58799b;
+     }
+
+     /*Ödeme Yöntemi Seçim Kutusu */
+     #paymentMethod {
+        display: block;
+        margin: 10px auto;
+        padding: 8px;
+        border-radius: 6px;
+        border: 3px solid #86275e;
+        width: 60%;
+        max-width: 300px;
+     }
+  </style>
+</head>
+<body>
+  <h2><span style="margin-left: 10px;">SEPET</span>🎟️</h2>
+  <div id="cartItems"></div> <!--Sepet öğeleri buraya eklenecek-->
+
+  <div id="total">Toplam: 0 TL</div> <!--Toplam fiyat gösterimi-->
+
+  <h3>Ödeme Yöntemi</h3>  <!-- Ödeme yöntemi başlığı-->
+  <!--Ödeme yöntemi seçim kutusu-->
+  <select id="paymentMethod">
+    <option value="kredi_karti">Kredi Kartı</option> <!--Kredi Kartı seçeneği-->
+    <option value="havale">Havale</option> <!--Havale seçeneği-->
+  </select>
+
+  <br><br>
+  <button onclick="purchase()">Satın Al</button> <!--Satın al butonu-->
+  <script>
+    //Bilet fiyatları tanımlanıyor
+    let prices = {
+      tam: 300,
+      ogrenci: 200
+    };
+
+    let total = 0; //Toplam tutar değişkeni
+
+    //Sepet verilerini backend'den al
+    fetch('../backend/get-cart.php') //Sepet verilerini çeken PHP dosyası
+      .then(res => res.json()) //Gelen yanıtı JSON'a çevir
+      .then(data => {
+        const cartDiv = document.getElementById('cartItems'); //Sepet div'i
+        total = 0; //Toplam sıfırlanır
+        data.forEach(item => {
+          const div = document.createElement('div'); //Her ürün için yeni div
+          div.className = 'cart-item'; //CSS sınıfı atanır
+          div.innerHTML = `
+            <strong>${item.title}</strong><br>
+            Tarih: ${item.event_date}<br>
+            Tür: ${item.category}<br>
+            <label>Bilet Türü:
+              <select onchange="updateTotal()" data-id="${item.id}">
+                <option value="tam">Tam (300 TL)</option>
+                <option value="ogrenci">Öğrenci (200 TL)</option>
+              </select>
+            </label>
+          `; //Etkinlik bilgileri ve bilet türü
+          cartDiv.appendChild(div); //Sepete ekle
+        });
+        updateTotal(); //İlk toplam hesapla
+      });
+
+    //Toplam fiyatı güncelleyen fonksiyon
+    function updateTotal() {
+      let selects = document.querySelectorAll('select[data-id]'); //Tüm bilet türü seçimleri
+      total = 0; //Toplam sıfırlanır
+      selects.forEach(select => {
+        total += prices[select.value]; //Seçilen türe göre fiyat eklenir
+      });
+      document.getElementById('total').innerText = "Toplam: " + total + " TL"; //Güncel toplam yazılır
+    }
+
+    //Satın alma işlemi
+    function purchase() {
+      if (total === 0) { //Eğer toplam 0 ise uyarı ver
+        alert("Lütfen önce bilet seçin.");
+        return;
+      }
+      let selects = document.querySelectorAll('select[data-id]'); //Seçilen biletler
+      let payment = document.getElementById('paymentMethod').value; //Ödeme yöntemi
+      let tickets = []; //Gönderilecek biletler dizisi
+
+      selects.forEach(select => {
+        tickets.push({
+          id: select.dataset.id, //Etkinlik ID
+          type: select.value //Seçilen bilet türü
+        });
+      });
+
+      //Satın alma isteği gönder
+      fetch('../backend/purchase.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }, //JSON formatı
+        body: JSON.stringify({
+          tickets: tickets, //Biletler
+          payment: payment //Ödeme yöntemi
+        })
+      }).then(() => {
+        alert("Satın Alma Tamamlandı!"); //Başarılı mesajı
+        window.location.href = 'home.html'; //Ana sayfaya yönlendirme
+      });
+    }
+  </script>
+</body>
+</html>

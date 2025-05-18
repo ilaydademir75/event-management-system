@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="tr"> <!--Sayfanın dili Türkçe olarak ayarlandı-->
+<head>
+  <meta charset="UTF-8"> <!--Türkçe karakterlerin doğru görüntülenmesi sağlandı-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--Mobil uyumluluk sağlandı-->
+  <title>İlgi Alanları</title> <!--Tarayıcıda görünen başlık-->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"> <!--Google Fonts üzerinden Poppins yazı tipi aktarıldı-->
+  <style>
+      /*Sayfanın Tasarımı*/
+      body {
+         font-family: 'Poppins', sans-serif; /*Yazı Tipi*/
+         background: linear-gradient(to right, #fff0a8, #fff7d3); /*Arka plan rengi*/
+         padding: 60px; /*Sayfa kenar boşlukları*/
+         margin: 0; /*Varsayılan margin sıfırlanır*/
+         color: #623572; /*Metin rengi*/
+      }
+
+      /*Başlık Tasarımı*/
+      h2 {
+        text-align: center; /*Yazıyı ortalamak için kullanıldı*/
+        color: #a48400;
+        font-size: 30px; /*Yazının büyüklüğü*/
+        margin-bottom: 40px; /* Alt boşluk */
+        text-decoration: underline; /*Yazının altı çizildi*/
+      }
+
+      /*Checkbox Grubu Kutusu Stil Ayarları*/
+      .checkbox-group {
+        background-color: #fff9e1;
+        padding: 70px; /*İç boşluk*/
+        border-radius: 20px; /*Köşelerini yuvarlaştırmak için kullanıldı*/
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1); /*Gölge efekti*/
+        max-width: 400px; /*Maksimum genişlik*/
+        margin: 0 auto 20px; /*Ortala ve alt boşluk*/
+      }
+
+      /*Etiket Tasarımı*/
+      label {
+        display: block; /*Block elementleri bulunduğu satırın tamamını doldurur. Yani yeni bir şey eklendiğinde yanından değil bir alt satırdan başlar*/
+        font-size: 20px; /*Yazı büyüklüğü*/
+        font-weight: bold; /*Yazıları kalın yapmak için kullanıldı*/
+        margin: 12px 0; /*Üst ve alt boşluk*/
+        padding: 8px 12px; /*İç boşluk*/
+        border-radius: 6px;
+        transition: background-color 0.2s ease; /*Arka plan geçiş efekti*/
+        cursor: pointer; /*Üzerine gelince imleç değişimi*/
+      }
+
+      label:hover {
+        background-color: #bebebe;  /*Etiket üzerine gelince arka plan değişir*/
+      }
+
+      /*Checkbox Stil Ayarları*/
+      input[type="checkbox"] {
+        margin-right: 10px; /*Checkbox ile yazı arasına boşluk*/
+        transform: scale(1.2); /*Checkbox boyutunu büyüt*/
+        accent-color: #0324a7; /*Checkbox seçildiğinde mavi renk*/
+      }
+
+      /*Kaydet Butonunun Stil Ayarları*/
+      button {
+        display: block;
+        margin: 0 auto; /*Ortala*/
+        padding: 10px 22px;  /*İç boşluk*/
+        background-color: #155734;
+        color: white;
+        font-size: 20px; /*Yazı büyüklüğü*/
+        border: none; /*Kenarlık yok*/
+        border-radius: 10px;
+        cursor: pointer; /*İmleç buton görünümü*/
+        box-shadow: 0 3px 6px rgb(94, 94, 94);
+        transition: background-color 0.3s ease, transform 0.2s ease; /*Geçiş efekti*/
+      }
+
+      button:hover {
+        background-color: #239056; /*Butonun üstüne gelindiğinde rengini değiştirir*/
+        transform: scale(1.05); /*Biraz büyütme efekti*/
+      }
+  </style>
+</head>
+<body>
+  <h2>İLGİ ALANLARINIZ NELERDİR?</h2>
+  <!--İlgi alanlarını içeren form-->
+  <form id="interestForm">
+    <div class="checkbox-group">
+      <!--Her biri checkbox ve etiket (label) içeren seçenekler-->
+      <label><input type="checkbox" name="interests[]" value="müzik"> Müzik</label>
+      <label><input type="checkbox" name="interests[]" value="spor"> Spor</label>
+      <label><input type="checkbox" name="interests[]" value="tiyatro"> Tiyatro</label>
+      <label><input type="checkbox" name="interests[]" value="teknoloji"> Teknoloji</label>
+      <label><input type="checkbox" name="interests[]" value="sinema"> Sinema</label>
+    </div>
+    <button type="submit">Kaydet ve İlerle</button> <!--Formu gönder butonu-->
+  </form>
+  <script>
+    document.getElementById('interestForm').addEventListener('submit', function(e) {
+      e.preventDefault(); //Sayfanın yeniden yüklenmesini engeller (varsayılan davranışı iptal eder)
+      //Seçilen tüm checkbox'lardan seçili olanların değerleri alınır
+      const selected = Array.from(document.querySelectorAll('input[name="interests[]"]:checked'))
+                            .map(input => input.value); //Seçilenlerin değerlerini diziye aktarır
+                    
+      //Eğer hiç ilgi alanı seçilmediyse kullanıcıyı uyar
+      if (selected.length === 0) {
+        alert("Lütfen en az bir ilgi alanı seçin.");
+        return; //İşlemi durdur
+      }
+
+       //Fetch API ile ilgi alanlarını backend'e gönder
+      fetch('../backend/save-interests.php', {
+        method: 'POST', //Veri gönderme yöntemi: POST
+        headers: { 'Content-Type': 'application/json' }, //Gönderilen verinin JSON formatında olduğunu belirtir
+        body: JSON.stringify({ interests: selected }) //Seçilen ilgi alanlarını JSON'a çevirip gönderir
+
+      })
+      .then(res => {
+        //Eğer sunucudan olumlu yanıt geldiyse kullanıcıyı bilgilendir ve yönlendir
+        if (res.ok) {
+          alert("İlgi alanlarınız kaydedildi.");
+          window.location.href = "home.html"; //home.html sayfasına yönlendir
+        } else {
+          alert("Bir hata oluştu. Lütfen tekrar deneyin."); //Hata mesajı
+        }
+      });
+    });
+  </script>
+</body>
+</html>

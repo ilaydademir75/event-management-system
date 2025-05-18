@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr"> <!--Sayfanın dili Türkçe olarak ayarlandı-->
+<head>
+    <meta charset="UTF-8"> <!--Türkçe karakterlerin doğru görüntülenmesi sağlandı-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!--Mobil uyumluluk sağlandı-->
+    <title>Giriş Yap</title> <!--Tarayıcıda görünen başlık-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"> <!--Google Fonts üzerinden Poppins yazı tipi aktarıldı-->
+    <style>
+        /*Sayfanın Tasarımı*/
+        body {
+            font-family: 'Poppins', sans-serif; /*Yazı Tipi*/
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #aee09a, #5e8065); /*Arka plan rengi*/
+            height: 100vh; /*Yükseklik tüm ekran boyu kadar*/
+            position: relative; /*İçerideki mutlak konumlandırmalar için temel sağlar*/
+        }
+
+        /*Form kutusu ortalandı ve tasarımı yapıldı*/
+        .form-container {
+            position: absolute; /*Ekranda ortalanabilmesi için mutlak konum*/
+            top: 50%; /*Dikeyde ortalama*/
+            left: 50%;  /*Yatayda ortalama*/
+            transform: translate(-50%, -50%);  /*Tam merkezleme*/
+            background-color: rgb(255, 252, 240);
+            padding: 90px; /*Kutunun iç boşluğu*/
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(181, 221, 107, 0.5); /*Form kutusunu gölgelendir*/
+            width: 100%;
+            max-width: 400px; /*Maksimum genişlik sınırı*/
+            animation: fadeIn 1s ease-out; /*Sayfa yüklendiğinde animasyon uygulanır*/
+        }
+
+        /*Fade-in Animasyonu Tanımı*/
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            top: 55%;
+          }
+          to {
+            opacity: 1;
+            top: 50%;
+          }
+        }
+
+        /*Başlık Tasarımı*/
+        h2 {
+            font-size: 40px; /*Yazının büyüklüğü*/
+            text-align: center; /*Yazıyı ortalamak için kullanıldı*/
+            margin-bottom: 30px; /*Alt boşluk*/
+            color: rgb(31, 51, 33);
+            text-shadow: 0 0 10px rgba(72, 144, 72, 0.8); /*Yazıyı gölgelendirmek için kullanıldı*/
+            text-decoration: underline; /*Yazının altı çizildi*/
+        }
+
+        /*Etiketlerin Tasarımı(E-Posta, Şifre)*/
+        label {
+            display: block; /*Block elementleri bulunduğu satırın tamamını doldurur. Yani yeni bir şey eklendiğinde yanından değil bir alt satırdan başlar*/
+            margin-top: 30px;  /*Üstten boşluk*/
+            font-weight: bold; /*Yazıları kalın yapmak için kullanıldı*/
+            font-size: 20px;
+        } 
+    
+        /*Giriş Alanlarının Tasarımı*/
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin-top: 8px;
+            border-radius: 8px; /*Köşelerini yuvarlaştırmak için kullanıldı*/
+            border: 1px solid #ccc;
+            font-size: 15px;
+            transition: 0.3s ease;  /*Geçiş efekti*/
+        }
+
+        /*Giriş Alanı Seçildiğinde*/
+        input:focus {
+            background-color: #fff0f8; 
+            border-color: #ab85c7; /*Üstüne tıklandığında arka planını değiştirir*/
+            outline: none; /*Varsayılan mavi kenarlığı kaldırır*/
+            box-shadow: 0 0 8px rgba(137, 88, 171, 0.5); /*Kutuyu gölgelendirmek için kullanıldı*/
+        }
+
+        /*Butonun Tasarımı*/
+        button {
+            margin-top: 25px;
+            width: 100%;
+            padding: 12px;
+            background-color: #38694b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #87ac8f; /*Butonun üstüne gelindiğinde rengini değiştirir*/
+        }
+
+        /*Giriş Yönlendirmesi İçin Paragrafın Tasarımı*/
+        p {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: rgb(77, 77, 77);
+        }
+
+        /*Giriş Bağlantısının Tasarımı*/
+        a {
+            color: #4689bc;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /*Giriş Bağlantısının Üstüne Gelindiğinde*/
+        a:hover {
+            color: #83b5db;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container"> <!--Form Kutusu-->
+        <h2>GİRİŞ YAP</h2>
+        <form action="../backend/login.php" method="POST"> <!--PHP dosyasına gönderim yapılır-->
+         <label for="email">E-posta:</label>
+         <input type="email" name="email" required>
+
+         <label for="password">Şifre:</label>
+         <input type="password" name="password" required>
+         <button type="submit">Giriş Yap</button>
+        </form>
+        <p>Hesabın Yok Mu?<br><a href="register.html">Kayıt Ol</a></p> <!--Kayıt ol linki-->
+    </div>
+</body>
+</html>
