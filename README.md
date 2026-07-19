@@ -111,4 +111,3 @@ Main database tables include:
 * Announcement management
 
 ---
-This project was developed for educational purposes.
